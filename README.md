@@ -44,3 +44,9 @@ npm run sim      # bot rozgrywa wyprawy i liczy statystyki balansu
 
 Grafika (pixel art w palecie Endesga 32), czcionka z polskimi znakami, efekty dźwiękowe i muzyka
 są generowane w kodzie, bez zewnętrznych plików.
+
+## Publikacja na GitHub Pages
+
+Gotowy workflow jest w `deploy/github-pages.yml`. Skopiuj go do `.github/workflows/pages.yml`,
+a w ustawieniach repozytorium wybierz **Settings → Pages → Source: GitHub Actions**. Każdy push na
+`main` zbuduje grę i opublikuje ją pod adresem `https://<użytkownik>.github.io/Rogalik/`.
