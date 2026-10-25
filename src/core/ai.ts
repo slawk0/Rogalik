@@ -183,10 +183,14 @@ function melee(c: Ctx, u: Unit): void {
     bite(c, u, p);
     return;
   }
+  // Fast hunters spend their second step on a bite once they reach you.
   const speed = DEFS[u.kind].speed ?? 1;
   const f = distField(s, u, [p.pos]);
   for (let i = 0; i < speed; i++) {
-    if (isAdjacent(u.pos, p.pos)) break;
+    if (i > 0 && isAdjacent(u.pos, p.pos)) {
+      bite(c, u, p);
+      return;
+    }
     if (!stepDown(c, u, f, DEFS[u.kind].flying ? 'fly' : 'step')) break;
     if (u.hp <= 0) return;
   }
@@ -409,7 +413,7 @@ function jaga(c: Ctx, u: Unit): void {
     if (uniq.length > 0) {
       emit(c, { t: 'strike', id: u.id, at: p.pos, style: 'throw' });
       emit(c, { t: 'text', at: u.pos, text: 'KOCIOŁ!', color: C_GOLD });
-      for (const k of uniq) spawn(c, 'bomb', k, 2);
+      for (const k of uniq) spawn(c, 'bomb', k, 3);
       return;
     }
   }

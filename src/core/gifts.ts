@@ -33,7 +33,7 @@ export const GIFTS: Gift[] = [
     apply: (c) => { c.s.hero.maxHp++; heal(c, 1); },
   },
   { id: 'zar', god: 'swarog', name: 'Żarliwe cięcie', desc: 'Cięcie zadaje 2 obrażenia zamiast 1.' },
-  { id: 'ognskok', god: 'swarog', name: 'Ognisty skok', desc: 'Lądowanie skoku podpala pola wokół na 2 tury.' },
+  { id: 'ognskok', god: 'swarog', name: 'Ognisty skok', desc: 'Lądowanie skoku podpala pola wokół na 2 tury. Ogień rani tylko wrogów.' },
   { id: 'hart', god: 'swarog', name: 'Hartowanie', desc: 'Pierwszy cios na każdej planszy jest blokowany.' },
   { id: 'wicher', god: 'strzybog', name: 'Wicher', desc: 'Pchnięcie odrzuca wroga o 2 pola.' },
   { id: 'domino', god: 'strzybog', name: 'Domino', desc: 'Wróg trafiony pchniętym wrogiem też leci dalej.' },
@@ -49,12 +49,12 @@ export const GIFTS: Gift[] = [
   },
   { id: 'odrodzenie', god: 'weles', name: 'Odrodzenie', desc: 'Raz w wyprawie przeżyjesz śmiertelny cios z 1 sercem.' },
   {
-    id: 'woda', god: 'mokosz', name: 'Woda żywa', desc: 'Leczy 1 serce.', stack: 99, weight: 1.5,
+    id: 'woda', god: 'mokosz', name: 'Woda żywa', desc: 'Leczy 1 serce.', stack: 99, weight: 1.2,
     when: (s) => player(s).hp < s.hero.maxHp,
     apply: (c) => heal(c, 1),
   },
   {
-    id: 'korzen', god: 'mokosz', name: 'Korzeń Mokoszy', desc: 'Leczy do pełna i daje +1 maksymalne serce.', stack: 1, weight: 0.4,
+    id: 'korzen', god: 'mokosz', name: 'Korzeń Mokoszy', desc: 'Leczy do pełna i daje +1 maksymalne serce.', stack: 1, weight: 0.3,
     when: (s) => player(s).hp < s.hero.maxHp,
     apply: (c) => { c.s.hero.maxHp++; heal(c, 99); },
   },

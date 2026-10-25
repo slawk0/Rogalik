@@ -40,7 +40,7 @@ const COST: Partial<Record<Kind, number>> = {
 const POOLS: [Kind, number][][] = [
   [['wilk', 5], ['bies', 2], ['dzik', 2]],
   [['utopiec', 3], ['ognik', 3], ['licho', 2], ['wilk', 1.5], ['bies', 1], ['dzik', 1]],
-  [['kosciotrup', 4], ['upior', 2.5], ['strzyga', 2], ['ognik', 1], ['licho', 1], ['bies', 1], ['utopiec', 1]],
+  [['kosciotrup', 3], ['upior', 3], ['strzyga', 2.5], ['ognik', 1], ['licho', 1.5], ['bies', 1.5], ['utopiec', 1]],
 ];
 
 const RANGED: Kind[] = ['bies', 'licho', 'upior'];
@@ -50,9 +50,15 @@ function firstDepthOf(kind: Kind): number {
   return 0;
 }
 
+// Enemy budget per normal level, by biome and level index.
+const BUDGET = [
+  [3.5, 5, 7, 8.5],
+  [7.5, 9, 10.5, 12],
+  [11, 12.5, 14, 15.5],
+];
+
 export function budgetFor(depth: number): number {
-  const n = depth - Math.floor(depth / LEVELS_PER_BIOME); // index among normal levels
-  return 4.5 + n * 1.3;
+  return BUDGET[biomeOf(depth)][depth % LEVELS_PER_BIOME] ?? 8;
 }
 
 interface Layout {

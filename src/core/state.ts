@@ -104,7 +104,7 @@ export const DEFS: Record<Kind, UnitDef> = {
   ognik: { name: 'Błędny ognik', hp: 1, flying: true, speed: 2, desc: 'Leci o 2. Obok Ciebie zapala się i za turę wybucha. Możesz go odepchnąć.' },
   licho: { name: 'Licho', hp: 1, desc: 'Rzuca bomby-klątwy. Bomby wybuchają po turze i da się je pchać.' },
   kosciotrup: { name: 'Kościotrup', hp: 2, desc: 'Gryzie z bliska. Kości składają się po 3 turach, chyba że na nie wejdziesz.' },
-  strzyga: { name: 'Strzyga', hp: 2, flying: true, speed: 2, desc: 'Lata i porusza się o 2. Bije z bliska.' },
+  strzyga: { name: 'Strzyga', hp: 2, flying: true, speed: 2, desc: 'Lata o 2 pola. Gdy doleci do Ciebie, od razu gryzie.' },
   upior: { name: 'Upiór', hp: 1, desc: 'Strzela w linii prostej z 2 do 5 pól. Nie strzela z bliska.' },
   leszy: { name: 'Leszy', hp: 8, heavy: true, boss: true, desc: 'Pan lasu. Przyzywa wilki, wypuszcza korzenie i znika między drzewami.' },
   jaga: { name: 'Baba Jaga', hp: 10, heavy: true, flying: true, boss: true, desc: 'Lata w moździerzu, szarżuje w linii i rzuca kotły bomb.' },

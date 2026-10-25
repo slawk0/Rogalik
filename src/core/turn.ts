@@ -39,7 +39,8 @@ function endOfRound(c: Ctx): void {
   for (const [k, t] of s.tiles) {
     if (t.fire <= 0) continue;
     const u = unitAt(s, k);
-    if (u && !DEFS[u.kind].flying) damage(c, u, 1, null, 'burn');
+    // Swarog's fire spares the hero.
+    if (u && u.kind !== 'player' && !DEFS[u.kind].flying) damage(c, u, 1, null, 'burn');
     if (dead(s)) return;
     t.fire--;
   }

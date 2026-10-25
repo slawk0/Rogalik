@@ -150,10 +150,12 @@ export class GameScene implements Scene {
       if (this.mode === 'fadeout') this.fade = 0;
       return;
     }
-    // descended
+    // descended: the hero sinks into the pit before the screen fades.
     sfx.descend();
+    const pv = this.view.units.get(player(this.state).id);
+    if (pv) pv.sink = 0.001;
     this.mode = 'fadeout';
-    this.fade = 0;
+    this.fade = -0.5;
   }
 
   private recordBest(won: boolean): void {
@@ -608,9 +610,10 @@ export class GameScene implements Scene {
       const v = this.view.units.get(boss.id);
       const bw = Math.min(200, w - 140);
       const frac = (v ? v.hp : boss.hp) / boss.maxHp;
-      drawText(ctx, DEFS[boss.kind].name.toUpperCase(), w / 2, 27, 8, { align: 'center' });
-      bar(ctx, Math.round(w / 2 - bw / 2), 39, bw, 4, frac, boss.kind === 'kosciej' && !s.eggBroken ? 28 : 8);
-      if (boss.kind === 'kosciej' && !s.eggBroken) drawText(ctx, 'rozbij jajo, by go zranić', w / 2, 46, 28, { align: 'center' });
+      const immortal = boss.kind === 'kosciej' && !s.eggBroken;
+      const label = DEFS[boss.kind].name.toUpperCase() + (immortal ? ' · rozbij jajo, by go zranić' : '');
+      drawText(ctx, label, w / 2, 27, immortal ? 28 : 8, { align: 'center' });
+      bar(ctx, Math.round(w / 2 - bw / 2), 38, bw, 3, frac, immortal ? 28 : 8);
     }
     // Leap.
     const ready = s.hero.leapCd === 0;
@@ -649,7 +652,7 @@ export class GameScene implements Scene {
       drawText(ctx, l.text, w / 2, h - 10 - (arr.length - 1 - i) * 10, l.color, { align: 'center' });
     });
     // New enemy introduction card.
-    if (this.intro.length && this.introT < 9 && this.mode !== 'gift') {
+    if (this.intro.length && this.introT < 9 && this.mode !== 'gift' && this.mode !== 'dead' && this.mode !== 'won') {
       const a = Math.min(1, this.introT * 3, (9 - this.introT) * 2);
       ctx.globalAlpha = a;
       let y = 54;
@@ -731,6 +734,14 @@ export class GameScene implements Scene {
     const cy = Math.floor(h / 2);
     if (won) {
       const sun = sprite('sun');
+      const sx = w / 2;
+      const sy = cy - 112 + sun.h;
+      for (let i = 0; i < 16; i++) {
+        const ang = (i / 16) * Math.PI * 2 + this.view.time * 0.3;
+        const len = 40 + (i % 2) * 30 + Math.sin(this.view.time * 2 + i) * 8;
+        pixelLine(ctx, sx + Math.cos(ang) * 26, sy + Math.sin(ang) * 26, sx + Math.cos(ang) * len * 2, sy + Math.sin(ang) * len * 2, PAL[i % 2 ? 10 : 11]);
+      }
+      if (Math.random() < 0.5) this.view.fx.rise(Math.random() * w - this.ox, h - this.oy, 0, 1, [10, 11, 19], 2, 40, 2.5);
       ctx.drawImage(sun.frames[0], Math.round(w / 2 - sun.w), cy - 112, sun.w * 2, sun.h * 2);
       drawText(ctx, 'SŁOŃCE WRACA NA NIEBO', w / 2, cy - 82, 11, { align: 'center', scale: 2 });
       drawText(ctx, 'Kościej pokonany. Wiosna wraca do świata żywych.', w / 2, cy - 60, 20, { align: 'center' });

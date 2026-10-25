@@ -623,7 +623,10 @@ export class View {
       }
       if (v.sink > 0) {
         v.sink += dt;
-        if (v.sink > 0.6) v.removed = true;
+        if (v.sink > 0.6) {
+          if (v.kind === 'player') v.alpha = 0;
+          else v.removed = true;
+        }
       }
     }
     for (const [id, v] of this.units) if (v.removed) this.units.delete(id);
