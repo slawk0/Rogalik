@@ -53,8 +53,8 @@ function firstDepthOf(kind: Kind): number {
 // Enemy budget per normal level, by biome and level index.
 const BUDGET = [
   [3.5, 5, 7, 8.5],
-  [7.5, 9, 10.5, 12],
-  [11, 12.5, 14, 15.5],
+  [8, 9.5, 11, 12.5],
+  [12, 13.5, 15, 16.5],
 ];
 
 export function budgetFor(depth: number): number {

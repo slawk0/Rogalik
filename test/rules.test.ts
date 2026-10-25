@@ -73,7 +73,7 @@ describe('pchnięcie', () => {
     const st = add(s2, 'strzyga', 0, 4);
     add(s2, 'wilk', -4, 0);
     const r2 = runTurn(s2, { t: 'move', dir: 3 })!;
-    expect(r2.state.units.find((u) => u.id === st.id)?.hp).toBe(1);
+    expect(r2.state.units.find((u) => u.id === st.id)?.hp).toBe(2);
   });
 
   it('ciężki boss nie przesuwa się, tylko dostaje 1', () => {

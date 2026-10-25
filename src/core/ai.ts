@@ -292,7 +292,7 @@ function bomber(c: Ctx, u: Unit): void {
       faceToward(u, best);
       emit(c, { t: 'strike', id: u.id, at: best, style: 'throw' });
       spawn(c, 'bomb', best, 2);
-      u.timer = 3;
+      u.timer = 2;
       return;
     }
   }
@@ -322,7 +322,7 @@ function archer(c: Ctx, u: Unit): void {
   const s = c.s;
   const p = player(s);
   const d = dist(u.pos, p.pos);
-  if (d >= 2 && d <= 5 && lineDir(u.pos, p.pos) >= 0 && clearShot(s, u.pos, p.pos, true)) {
+  if (d >= 2 && d <= 6 && lineDir(u.pos, p.pos) >= 0 && clearShot(s, u.pos, p.pos, true)) {
     faceToward(u, p.pos);
     emit(c, { t: 'strike', id: u.id, at: p.pos, style: 'cast' });
     const path: number[] = [];
@@ -339,7 +339,7 @@ function archer(c: Ctx, u: Unit): void {
     stepAway(c, u, p.pos);
     return;
   }
-  reposition(c, u, 2, 5, true);
+  reposition(c, u, 2, 6, true);
 }
 
 // ---------------------------------------------------------------- bosses
@@ -501,8 +501,8 @@ export function actEnemy(c: Ctx, u: Unit): void {
         u.intent = null;
         return;
       }
-      if (lineIntent(c, u, 5)) return;
-      reposition(c, u, 2, 4, false);
+      if (lineIntent(c, u, 6)) return;
+      reposition(c, u, 2, 5, false);
       return;
     case 'dzik': {
       if (u.intent) {

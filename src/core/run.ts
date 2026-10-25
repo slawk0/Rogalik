@@ -20,10 +20,11 @@ export function carryFrom(s: GameState): Carry {
   return { hero: { ...s.hero, gifts: s.hero.gifts.slice() }, stats: { ...s.stats }, hp: player(s).hp, nextId: s.nextId };
 }
 
-export function nextLevel(run: Run, healFull: boolean): void {
+/** Moves to the next depth. After a boss the hero recovers 2 hearts. */
+export function nextLevel(run: Run, afterBoss: boolean): void {
   const s = run.state;
   const carry = carryFrom(s);
-  if (healFull) carry.hp = carry.hero.maxHp;
+  if (afterBoss) carry.hp += 2;
   carry.hp = Math.min(carry.hp, carry.hero.maxHp);
   run.state = genLevel(s.depth + 1, carry, levelSeed(run.seed, s.depth + 1));
 }

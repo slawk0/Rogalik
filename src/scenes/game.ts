@@ -15,7 +15,7 @@ import { BoardRenderer, drawHex, hexShape, pickHex } from '../render/board';
 import { drawText, measure, wrap } from '../render/font';
 import { drawHelp } from '../render/help';
 import { PAL } from '../render/palette';
-import { sprite } from '../render/sprites';
+import { giftIcon, sprite } from '../render/sprites';
 import { bar, dissolve, panel } from '../render/ui';
 import type { App, Scene } from './types';
 
@@ -634,7 +634,7 @@ export class GameScene implements Scene {
     gifts.forEach((g, i) => {
       const x = gx + i * 14;
       const y = h - 20;
-      ctx.drawImage(sprite(giftById(g).god).frames[0], x, y);
+      ctx.drawImage(giftIcon(g).frames[0], x, y);
       if (this.mx >= x && this.mx < x + 13 && this.my >= y && this.my < y + 13) hoverGift = i;
     });
     if (gifts.length) drawText(ctx, 'DARY', w - 6, h - 32, 22, { align: 'right' });
@@ -696,7 +696,11 @@ export class GameScene implements Scene {
     drawText(ctx, 'BOGOWIE PATRZĄ NA CIEBIE', w / 2, h / 2 - 82, 11, { align: 'center', scale: 2 });
     drawText(ctx, 'Wybierz dar (kliknij albo 1, 2, 3)', w / 2, h / 2 - 60, 21, { align: 'center' });
     const cw = Math.min(140, Math.floor((w - 40) / 3));
-    const ch = 120;
+    let ch = 0;
+    for (const id of this.offer) {
+      const g = giftById(id);
+      ch = Math.max(ch, 54 + wrap(g.name, cw - 10).length * 10 + wrap(g.desc, cw - 12).length * 10);
+    }
     const gap = 8;
     const x0 = Math.floor(w / 2 - (cw * 3 + gap * 2) / 2);
     const y0 = Math.floor(h / 2 - 44);
@@ -709,15 +713,15 @@ export class GameScene implements Scene {
       const y = y0 - (hov ? 3 : 0) + Math.round((1 - Math.min(1, this.overlayT * 3 - i * 0.3)) * 30);
       this.giftRects.push({ x, y: y0 - 3, w: cw, h: ch + 6 });
       panel(ctx, x, y, cw, ch, hov ? god.color : 23, 0.95);
-      const sig = sprite(g.god);
-      const sx = Math.round(x + cw / 2 - sig.w / 2);
+      const icon = giftIcon(id);
       const glow = hov ? Math.round(Math.sin(this.view.time * 8) * 1) : 0;
-      ctx.drawImage(sig.frames[0], sx, y + 8 + glow);
-      drawText(ctx, god.name.toUpperCase(), x + cw / 2, y + 26, god.color, { align: 'center' });
+      ctx.drawImage(icon.frames[0], Math.round(x + cw / 2 - icon.w), y + 2 + glow, icon.w * 2, icon.h * 2);
+      ctx.drawImage(sprite(g.god).frames[0], x + cw - 17, y + 4);
+      drawText(ctx, god.name.toUpperCase(), x + cw / 2, y + 30, god.color, { align: 'center' });
       const nameLines = wrap(g.name, cw - 10);
-      nameLines.forEach((l, j) => drawText(ctx, l, x + cw / 2, y + 40 + j * 10, 19, { align: 'center' }));
+      nameLines.forEach((l, j) => drawText(ctx, l, x + cw / 2, y + 42 + j * 10, 19, { align: 'center' }));
       const dl = wrap(g.desc, cw - 12);
-      dl.forEach((l, j) => drawText(ctx, l, x + cw / 2, y + 44 + nameLines.length * 10 + j * 10, 20, { align: 'center' }));
+      dl.forEach((l, j) => drawText(ctx, l, x + cw / 2, y + 47 + nameLines.length * 10 + j * 10, 20, { align: 'center' }));
       drawText(ctx, String(i + 1), x + 6, y + 5, 22);
     });
     ctx.globalAlpha = 1;
@@ -735,11 +739,12 @@ export class GameScene implements Scene {
     if (won) {
       const sun = sprite('sun');
       const sx = w / 2;
-      const sy = cy - 112 + sun.h;
+      const sy = cy - 112 + sun.h - 1;
       for (let i = 0; i < 16; i++) {
         const ang = (i / 16) * Math.PI * 2 + this.view.time * 0.3;
-        const len = 40 + (i % 2) * 30 + Math.sin(this.view.time * 2 + i) * 8;
-        pixelLine(ctx, sx + Math.cos(ang) * 26, sy + Math.sin(ang) * 26, sx + Math.cos(ang) * len * 2, sy + Math.sin(ang) * len * 2, PAL[i % 2 ? 10 : 11]);
+        const len = 34 + (i % 2) * 12 + Math.sin(this.view.time * 2 + i) * 4;
+        if (Math.sin(ang) > 0.35) continue; // keep rays above the title
+        pixelLine(ctx, sx + Math.cos(ang) * 16, sy + Math.sin(ang) * 16, sx + Math.cos(ang) * len, sy + Math.sin(ang) * len, PAL[i % 2 ? 10 : 11]);
       }
       if (Math.random() < 0.5) this.view.fx.rise(Math.random() * w - this.ox, h - this.oy, 0, 1, [10, 11, 19], 2, 40, 2.5);
       ctx.drawImage(sun.frames[0], Math.round(w / 2 - sun.w), cy - 112, sun.w * 2, sun.h * 2);
@@ -767,7 +772,7 @@ export class GameScene implements Scene {
     let y = cy - 31 + rows.length * 12 + 14;
     if (s.hero.gifts.length) {
       const gw = s.hero.gifts.length * 14;
-      s.hero.gifts.forEach((g, i) => ctx.drawImage(sprite(giftById(g).god).frames[0], Math.round(w / 2 - gw / 2 + i * 14), y));
+      s.hero.gifts.forEach((g, i) => ctx.drawImage(giftIcon(g).frames[0], Math.round(w / 2 - gw / 2 + i * 14), y));
       y += 18;
     }
     if (this.newBest) drawText(ctx, 'NOWY REKORD!', w / 2, y, 11, { align: 'center' });

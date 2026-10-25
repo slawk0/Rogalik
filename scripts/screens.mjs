@@ -19,7 +19,7 @@ await p.mouse.move(720, 470);
 await p.waitForTimeout(200);
 await p.screenshot({ path: 'shots/scr_gift.png' });
 // Death.
-await p.evaluate(() => { const g = window.__nawia.scene; g.state.killedBy = 'Strzyga'; g.state.depth = 12; g.state.hero.gifts = ['lancuch', 'zar', 'domino']; g.mode = 'dead'; g.overlayT = 0; });
+await p.evaluate(() => { const g = window.__nawia.scene; g.state.killedBy = 'Strzyga'; g.state.depth = 12; g.state.hero.gifts = ['lancuch', 'zar', 'domino', 'wicher', 'cien', 'woda']; g.mode = 'dead'; g.overlayT = 0; });
 await p.waitForTimeout(1500);
 await p.screenshot({ path: 'shots/scr_dead.png' });
 await p.evaluate(() => { const g = window.__nawia.scene; g.mode = 'won'; g.overlayT = 0; });

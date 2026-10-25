@@ -29,7 +29,7 @@ export const GIFTS: Gift[] = [
   { id: 'gromwypad', god: 'perun', name: 'Gromowy wypad', desc: 'Wypad razi też wroga stojącego za celem.' },
   { id: 'reka', god: 'perun', name: 'Ręka Peruna', desc: 'Lądowanie skoku zadaje 1 obrażenie wszystkim sąsiadom.' },
   {
-    id: 'kuznia', god: 'swarog', name: 'Kuźnia Swaroga', desc: '+1 maksymalne serce i leczy 1 serce.', stack: 3,
+    id: 'kuznia', god: 'swarog', name: 'Kuźnia Swaroga', desc: '+1 maksymalne serce i leczy 1 serce.', stack: 2,
     apply: (c) => { c.s.hero.maxHp++; heal(c, 1); },
   },
   { id: 'zar', god: 'swarog', name: 'Żarliwe cięcie', desc: 'Cięcie zadaje 2 obrażenia zamiast 1.' },
@@ -49,7 +49,7 @@ export const GIFTS: Gift[] = [
   },
   { id: 'odrodzenie', god: 'weles', name: 'Odrodzenie', desc: 'Raz w wyprawie przeżyjesz śmiertelny cios z 1 sercem.' },
   {
-    id: 'woda', god: 'mokosz', name: 'Woda żywa', desc: 'Leczy 1 serce.', stack: 99, weight: 1.2,
+    id: 'woda', god: 'mokosz', name: 'Woda żywa', desc: 'Leczy 1 serce.', stack: 99, weight: 1,
     when: (s) => player(s).hp < s.hero.maxHp,
     apply: (c) => heal(c, 1),
   },

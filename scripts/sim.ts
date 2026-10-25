@@ -6,6 +6,7 @@ import { newRun, nextLevel } from '../src/core/run';
 import { runTurn } from '../src/core/turn';
 
 const runs = Number(process.argv[2] ?? 200);
+const NOISE = Number(process.argv[3] ?? 3);
 let wins = 0;
 const deaths: Record<string, number> = {};
 const depthReached: number[] = new Array(16).fill(0);
@@ -26,7 +27,7 @@ for (let i = 0; i < runs; i++) {
     const dmgBefore = s.stats.damageTaken;
     let guard = 0;
     while (!s.outcome && guard++ < 250) {
-      const r = runTurn(s, botAction(s, 3, () => rng.next()));
+      const r = runTurn(s, botAction(s, NOISE, () => rng.next()));
       if (!r) throw new Error('bot chose invalid action');
       s = r.state;
     }

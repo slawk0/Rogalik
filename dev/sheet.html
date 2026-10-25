@@ -2,7 +2,8 @@
 <canvas id="c" style="image-rendering:pixelated"></canvas>
 <script type="module">
 import { ART } from '/src/render/art.ts';
-import { sprite, wispHot } from '/src/render/sprites.ts';
+import { sprite, wispHot, giftIcon } from '/src/render/sprites.ts';
+import { GIFT_ART } from '/src/render/art.ts';
 import { drawText } from '/src/render/font.ts';
 const c = document.getElementById('c');
 const W = 330, H = 200, S = 4;
@@ -20,6 +21,7 @@ for (const name of Object.keys(ART)) {
   rowH = Math.max(rowH, s.h);
 }
 const h = wispHot(); ctx.drawImage(h.frames[0], x, y);
+let gx = 4; for (const id of Object.keys(GIFT_ART)) { const g = giftIcon(id); ctx.drawImage(g.frames[0], gx, H - 50, 26, 26); gx += 18; }
 drawText(ctx, 'Zażółć gęślą jaźń! ŻÓŁTA ŚĆIEŻKA Ąę 0123456789', 4, H - 30, 19);
 drawText(ctx, 'Łańcuch piorunów: każde zabójstwo razi wroga.', 4, H - 16, 11);
 </script></body></html>

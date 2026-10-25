@@ -1,4 +1,4 @@
-import { ART, BREATH } from './art';
+import { ART, BREATH, GIFT_ART } from './art';
 import { CHARMAP, PAL } from './palette';
 
 export interface Sprite {
@@ -122,4 +122,10 @@ export function sprite(name: string): Sprite {
 /** Hot (primed) will-o-wisp. */
 export function wispHot(): Sprite {
   return spriteFrom('ognikHot', recolor(ART.ognik, { c: 'o', b: 'y', w: 'Y' }), { split: 0 });
+}
+
+export function giftIcon(id: string): Sprite {
+  const rows = GIFT_ART[id];
+  if (!rows) return sprite('sun');
+  return spriteFrom(`gift:${id}`, rows, { split: 0 });
 }
