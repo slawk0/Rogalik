@@ -30,7 +30,18 @@ i Kościej, który jest nieśmiertelny, dopóki nie rozbijesz jego jaja.
 | Czekaj | Spacja albo klik na bohatera |
 | Pomoc | H |
 | Dźwięk | M |
-| Pauza | Esc |
+| Pauza / menu | Esc albo przycisk ≡ |
+
+## Na telefonie
+
+Gra działa w pionie i w poziomie.
+
+- **Dotknij pola** obok bohatera, żeby się ruszyć. Ruch, po którym oberwiesz, wymaga drugiego dotknięcia
+  (pole miga na czerwono).
+- **Przytrzymaj palec** na polu, żeby zobaczyć skutki ruchu bez ruszania się; możesz przesuwać palec.
+- Przyciski na dole: **SKOK** (potem dotknij pola) i **CZEKAJ**. Przycisk **≡** w rogu otwiera menu.
+- Dotknięcie ikony daru pokazuje jego opis.
+- W przeglądarce wybierz „Dodaj do ekranu głównego”, żeby grać na pełnym ekranie, bez paska adresu.
 
 ## Uruchomienie
 

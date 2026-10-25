@@ -6,6 +6,9 @@ export interface Scene {
   draw(ctx: CanvasRenderingContext2D, w: number, h: number): void;
   onMouseMove?(x: number, y: number): void;
   onMouseDown?(x: number, y: number, button: number): void;
+  onTap?(x: number, y: number): void;
+  onLongPress?(x: number, y: number): void;
+  onRelease?(): void;
   onKey?(code: string, e: KeyboardEvent): void;
   onKeyUp?(code: string): void;
 }

@@ -1,5 +1,11 @@
+/** Minimum internal resolution: landscape and portrait. */
 export const MIN_W = 480;
 export const MIN_H = 300;
+export const MIN_W_PORTRAIT = 232;
+export const MIN_H_PORTRAIT = 420;
+
+/** Layouts narrower than this use the stacked (phone portrait) variant. */
+export const NARROW = 420;
 
 /** Low-resolution buffer scaled up by an integer factor to fill the window. */
 export class Screen {
@@ -11,6 +17,7 @@ export class Screen {
   h = MIN_H;
   scale = 1;
   dpr = 1;
+  portrait = false;
   onResize: (() => void) | null = null;
 
   constructor(display: HTMLCanvasElement) {
@@ -19,16 +26,28 @@ export class Screen {
     this.buf = document.createElement('canvas');
     this.ctx = this.buf.getContext('2d')!;
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    const again = () => this.resize();
+    window.addEventListener('resize', again);
+    window.addEventListener('orientationchange', () => setTimeout(again, 150));
+    window.visualViewport?.addEventListener('resize', again);
   }
 
   resize(): void {
     this.dpr = window.devicePixelRatio || 1;
-    const pw = Math.floor(window.innerWidth * this.dpr);
-    const ph = Math.floor(window.innerHeight * this.dpr);
-    this.scale = Math.max(1, Math.floor(Math.min(pw / MIN_W, ph / MIN_H)));
-    this.w = Math.ceil(pw / this.scale);
-    this.h = Math.ceil(ph / this.scale);
+    const vw = window.visualViewport?.width ?? window.innerWidth;
+    const vh = window.visualViewport?.height ?? window.innerHeight;
+    const pw = Math.floor(Math.min(window.innerWidth, vw) * this.dpr);
+    const ph = Math.floor(Math.min(window.innerHeight, vh) * this.dpr);
+    this.portrait = ph > pw;
+    const mw = this.portrait ? MIN_W_PORTRAIT : MIN_W;
+    const mh = this.portrait ? MIN_H_PORTRAIT : MIN_H;
+    const scale = Math.max(1, Math.floor(Math.min(pw / mw, ph / mh)));
+    const w = Math.ceil(pw / scale);
+    const h = Math.ceil(ph / scale);
+    if (w === this.w && h === this.h && scale === this.scale && this.display.width === w * scale) return;
+    this.scale = scale;
+    this.w = w;
+    this.h = h;
     this.buf.width = this.w;
     this.buf.height = this.h;
     this.display.width = this.w * this.scale;

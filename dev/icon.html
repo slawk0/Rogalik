@@ -1,0 +1,25 @@
+<!doctype html><html><body style="margin:0;background:#000">
+<canvas id="c"></canvas>
+<script type="module">
+import { sprite } from '/src/render/sprites.ts';
+import { hexShape } from '/src/render/board.ts';
+import { PAL } from '/src/render/palette.ts';
+const size = Number(new URLSearchParams(location.search).get('size') || 512);
+const c = document.getElementById('c');
+c.width = size; c.height = size;
+const ctx = c.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+// Draw at 32x32 pixel-art resolution, then scale up.
+const art = document.createElement('canvas');
+art.width = 32; art.height = 32;
+const a = art.getContext('2d');
+a.fillStyle = PAL[24]; a.fillRect(0, 0, 32, 32);
+for (const [x, y, c] of [[3, 2, 20], [9, 5, 11], [14, 1, 20], [21, 4, 20], [27, 2, 11], [30, 7, 20], [5, 9, 20], [25, 10, 20], [18, 7, 21], [1, 6, 21]]) { a.fillStyle = PAL[c]; a.fillRect(x, y, 1, 1); }
+a.drawImage(hexShape(5, 'fill'), 2, 14);
+a.drawImage(hexShape(13, 'fill'), 2, 9);
+a.drawImage(hexShape(12, 'line', 0.6), 2, 9);
+const p = sprite('player');
+a.drawImage(p.frames[0], 16 - Math.floor(p.w / 2), 25 - p.h);
+ctx.drawImage(art, 0, 0, size, size);
+document.title = 'ready';
+</script></body></html>

@@ -1,10 +1,10 @@
 // Plays the game in a real browser with the bot, taking periodic screenshots.
 // Usage: node scripts/play.mjs <steps> <shotEvery> [seed]
 import { createRequire } from 'module';
-const { chromium } = createRequire(import.meta.url)('playwright');
-const [steps = '200', every = '25', seed = '7'] = process.argv.slice(2);
+const { chromium, devices } = createRequire(import.meta.url)('playwright');
+const [steps = '200', every = '25', seed = '7', device] = process.argv.slice(2);
 const b = await chromium.launch();
-const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+const p = device ? await (await b.newContext({ ...devices[device] })).newPage() : await b.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 p.on('pageerror', (e) => errors.push(String(e.stack || e)));
 p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });

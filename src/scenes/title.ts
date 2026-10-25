@@ -5,7 +5,8 @@ import type { GameState } from '../core/state';
 import { initAudio, isMuted, sfx, toggleMute } from '../audio/audio';
 import { backgroundCanvas, drawAmbient } from '../render/background';
 import { BoardRenderer } from '../render/board';
-import { drawText } from '../render/font';
+import { drawText, wrap } from '../render/font';
+import { fullscreenAvailable, toggleFullscreen } from '../fullscreen';
 import { drawHelp } from '../render/help';
 import { PAL } from '../render/palette';
 import { sprite } from '../render/sprites';
@@ -39,6 +40,9 @@ export class TitleScene implements Scene {
       { label: () => 'Jak grać', y: 0, act: () => { this.help = true; } },
       { label: () => `Dźwięk: ${isMuted() ? 'wyłączony' : 'włączony'}`, y: 0, act: () => { toggleMute(); } },
     ];
+    if (fullscreenAvailable()) {
+      this.items.push({ label: () => (document.fullscreenElement ? 'Zamknij pełny ekran' : 'Pełny ekran'), y: 0, act: () => toggleFullscreen() });
+    }
   }
 
   private go(f: () => void): void {
@@ -143,9 +147,13 @@ export class TitleScene implements Scene {
     });
     const best = loadBest();
     const foot = `Rekord: ${best.score} dusz${best.wins ? ` · zwycięstwa: ${best.wins}` : ''}`;
-    drawText(ctx, foot, w / 2, h - 26, 22, { align: 'center' });
-    drawText(ctx, 'Mysz albo Q W E / A S D · PPM skok · H pomoc · M dźwięk', w / 2, h - 14, 23, { align: 'center' });
-    if (this.help) drawHelp(ctx, w, h, t);
+    const hint = this.app.input.touch
+      ? 'Dotknij pola, by iść · przytrzymaj, by zobaczyć skutki'
+      : 'Mysz albo Q W E / A S D · PPM skok · H pomoc · M dźwięk';
+    const hl = wrap(hint, w - 12);
+    hl.forEach((l, i) => drawText(ctx, l, w / 2, h - 14 - (hl.length - 1 - i) * 10, 23, { align: 'center' }));
+    drawText(ctx, foot, w / 2, h - 26 - (hl.length - 1) * 10, 22, { align: 'center' });
+    if (this.help) drawHelp(ctx, w, h, t, this.app.input.touch);
     ctx.fillStyle = PAL[25];
     dissolve(ctx, w, h, this.fade);
   }

@@ -37,6 +37,18 @@ function setScene(s: Scene): void {
       initAudio();
       scene.onMouseDown?.(x, y, b);
     },
+    onTap: (x, y) => {
+      initAudio();
+      if (scene.onTap) scene.onTap(x, y);
+      else {
+        scene.onMouseMove?.(x, y);
+        scene.onMouseDown?.(x, y, 0);
+      }
+    },
+    onLongPress: (x, y) => scene.onLongPress?.(x, y),
+    onRelease: () => scene.onRelease?.(),
+    // iOS unlocks audio only inside a "release" gesture.
+    onPointerUp: () => initAudio(),
     onKey: (c, e) => scene.onKey?.(c, e),
     onKeyUp: (c) => scene.onKeyUp?.(c),
   };
@@ -52,11 +64,16 @@ function frame(now: number): void {
   const ctx = screen.ctx;
   ctx.imageSmoothingEnabled = false;
   scene.draw(ctx, screen.w, screen.h);
-  if (input.inside) drawCursor(ctx, input.mx, input.my);
+  if (input.inside && !input.touch) drawCursor(ctx, input.mx, input.my);
   screen.present();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
+function internalToClient(x: number, y: number): { x: number; y: number } {
+  const r = screen.display.getBoundingClientRect();
+  return { x: r.left + ((x + 0.5) / screen.w) * r.width, y: r.top + ((y + 0.5) / screen.h) * r.height };
+}
 
 // Debug hooks for automated screenshots.
 (window as unknown as Record<string, unknown>).__nawia = {
@@ -69,10 +86,14 @@ requestAnimationFrame(frame);
     const r = (k % 128) - 32;
     const x = g.ox + q * 22;
     const y = g.oy + r * 24 + q * 12;
-    return { x: ((x + 0.5) * screen.scale) / screen.dpr, y: ((y + 0.5) * screen.scale) / screen.dpr };
+    return internalToClient(x, y);
+  },
+  internalToClient(x: number, y: number) {
+    return internalToClient(x, y);
   },
   bot() {
-    const g = scene as unknown as { state: Parameters<typeof botAction>[0]; act(a: unknown): void; mode: string; pickGift(i: number): void };
+    const g = scene as unknown as { state: Parameters<typeof botAction>[0]; act(a: unknown): void; mode: string; pickGift(i: number): void; introT: number };
+    g.introT = 1000;
     if (g.mode === 'play') g.act(botAction(g.state, 2));
     else if (g.mode === 'gift') g.pickGift(Math.floor(Math.random() * 3));
     return g.mode;
