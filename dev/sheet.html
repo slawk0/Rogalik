@@ -1,0 +1,25 @@
+<!doctype html><html><body style="background:#262b44;margin:0">
+<canvas id="c" style="image-rendering:pixelated"></canvas>
+<script type="module">
+import { ART } from '/src/render/art.ts';
+import { sprite, wispHot } from '/src/render/sprites.ts';
+import { drawText } from '/src/render/font.ts';
+const c = document.getElementById('c');
+const W = 330, H = 200, S = 4;
+c.width = W; c.height = H; c.style.width = W*S+'px'; c.style.height = H*S+'px';
+const ctx = c.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+let x = 4, y = 4, rowH = 0;
+for (const name of Object.keys(ART)) {
+  const s = sprite(name);
+  if (x + s.w * 2 + 6 > W) { x = 4; y += rowH + 12; rowH = 0; }
+  ctx.drawImage(s.frames[0], x, y);
+  ctx.drawImage(s.frames[1], x + s.w + 1, y);
+  drawText(ctx, name.slice(0, 7), x, y + s.h + 1, 20, { shadow: null });
+  x += Math.max(s.w * 2 + 4, 34);
+  rowH = Math.max(rowH, s.h);
+}
+const h = wispHot(); ctx.drawImage(h.frames[0], x, y);
+drawText(ctx, 'Zażółć gęślą jaźń! ŻÓŁTA ŚĆIEŻKA Ąę 0123456789', 4, H - 30, 19);
+drawText(ctx, 'Łańcuch piorunów: każde zabójstwo razi wroga.', 4, H - 16, 11);
+</script></body></html>
